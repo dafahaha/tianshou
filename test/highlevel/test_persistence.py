@@ -15,7 +15,7 @@ class _StubWorld:
     construct the full World (which requires environments, a logger, etc.).
     """
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self.directory = directory
 
     def persist_path(self, filename: str) -> str:
@@ -26,7 +26,7 @@ class _StubWorld:
 
 
 class _DummyPolicy(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.net = nn.Linear(3, 2)
 
@@ -50,9 +50,9 @@ def test_policy_persistence_restore_roundtrip(mode: PolicyPersistence.Mode) -> N
         original_weight = original.net.weight.detach().clone()
 
         persistence = PolicyPersistence(mode=mode)
-        persistence.persist(original, world)
+        persistence.persist(original, world)  # type: ignore[arg-type]
 
         restored = _DummyPolicy()
-        persistence.restore(restored, world, device="cpu")
+        persistence.restore(restored, world, device="cpu")  # type: ignore[arg-type]
 
         assert torch.allclose(restored.net.weight.detach(), original_weight)
